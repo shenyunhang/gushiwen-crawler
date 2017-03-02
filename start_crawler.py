@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
-from config import cfg
 from crawler import Crawler
 from parser import Parser
 from multiprocessing import Queue
+
+from config import cfg
 
 if __name__ == '__main__':
     print 'start'
@@ -15,3 +15,5 @@ if __name__ == '__main__':
 
     parser = Parser(queue_data)
     parser.start()
+
+    print 'finish'

@@ -11,17 +11,15 @@ class Parser(Process):
 
     def __init__(self, queue_data):
         super(Parser, self).__init__()
-        self._num = 0
-        self._id = 1
+        self._index = 1
 
         self._queue_data = queue_data
-
         self._delete = u'该文章不存在或已被删除，点击返回古诗文网首页'
 
     def run(self):
         while True:
             data = self._queue_data.get()
-            self._id = data[0]
+            self._index = data[0]
             html_contents = data[1]
 
             html_contents = re.sub('<br />', '\n', html_contents)
@@ -50,7 +48,7 @@ class Parser(Process):
                 class_='son2').get_text(strip=True)
             content_poetry = re.sub('\n\n(\n*)', '\n', content_poetry)
 
-            path_html, path_txt = get_output_path(dynasty_poetry, self._id)
+            path_html, path_txt = get_output_path(dynasty_poetry, self._index)
             file_html = open(path_html, 'w')
             file_html.writelines(data[1].encode('utf-8'))
             file_html.close()
@@ -61,12 +59,10 @@ class Parser(Process):
             file_txt.close()
 
             print '------------------------------------------'
-            print 'parser: ', self._id
+            print 'Parser: ', self._index
             print '作者：', author_poetry
             print '朝代：', dynasty_poetry
             print '标题：', title_poetry
             print '原文：\n', content_poetry
-
-            self._num += 1
 
         print 'Parser finish'
