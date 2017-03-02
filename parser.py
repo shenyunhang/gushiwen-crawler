@@ -41,12 +41,12 @@ class Parser(Process):
             author_poetry = soup_only_main3.find(class_='son2').p.string
             soup_only_main3.find(class_='son2').p.decompose()
 
-            # TODO(YH): more than one p
             soup_only_main3.find(class_='son2').p.decompose()
             soup_only_main3.find(class_='pingfen').decompose()
             content_poetry = soup_only_main3.find(
-                class_='son2').get_text(strip=True)
-            content_poetry = re.sub('\n\n(\n*)', '\n', content_poetry)
+                class_='son2').get_text()
+            content_poetry = re.sub('[\n]+', '\n', content_poetry)
+            content_poetry=content_poetry.strip()
 
             path_html, path_txt = get_output_path(dynasty_poetry, self._index)
             file_html = open(path_html, 'w')
@@ -54,15 +54,16 @@ class Parser(Process):
             file_html.close()
             file_txt = open(path_txt, 'w')
             file_txt.writelines(title_poetry.encode('utf-8') + '\n')
+            file_txt.writelines(dynasty_poetry.encode('utf-8') + '\n')
             file_txt.writelines(author_poetry.encode('utf-8') + '\n')
             file_txt.writelines(content_poetry.encode('utf-8') + '\n')
             file_txt.close()
 
-            print '------------------------------------------'
+            print '-----------------------------------------------------------'
             print 'Parser: ', self._index
-            print '作者：', author_poetry
-            print '朝代：', dynasty_poetry
             print '标题：', title_poetry
+            print '朝代：', dynasty_poetry
+            print '作者：', author_poetry
             print '原文：\n', content_poetry
 
         print 'Parser finish'

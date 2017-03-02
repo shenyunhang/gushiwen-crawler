@@ -18,11 +18,11 @@ class Crawler(Process):
         while True:
             if self._index > 100000:
                 continue
-            r = requests.get(cfg.POETRY_URL.format(self._id))
-            print '------------------------------------------'
-            print 'Crawler: ', self._id, r.status_code
+            r = requests.get(cfg.POETRY_URL.format(self._index))
+            print '-----------------------------------------------------------'
+            print 'Crawler: ', self._index, r.status_code
 
-            self._queue_data.put([self._id, r.text])
+            self._queue_data.put([self._index, r.text])
             self._index += 1
 
         print 'Crawler finish'
