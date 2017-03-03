@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from crawler import Crawler
@@ -15,5 +14,8 @@ if __name__ == '__main__':
 
     parser = Parser(queue_data)
     parser.start()
+
+    parser.join()
+    crawler.terminate()
 
     print 'finish'

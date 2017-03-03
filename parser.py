@@ -12,6 +12,7 @@ class Parser(Process):
     def __init__(self, queue_data):
         super(Parser, self).__init__()
         self._index = 1
+        self._num_empty = 0
 
         self._queue_data = queue_data
         self._delete = u'该文章不存在或已被删除，点击返回古诗文网首页'
@@ -27,9 +28,15 @@ class Parser(Process):
             soup_only_main3 = BeautifulSoup(
                 html_contents, 'html.parser', parse_only=only_main3)
 
+            # 没有文章了
+            if self._num_empty > 1000:
+                break
             # 文章不存在
             if soup_only_main3.get_text(strip=True) == self._delete:
+                self._num_empty += 1
                 continue
+            else:
+                self._num_empty = 0
 
             title_poetry = soup_only_main3.find(class_='son1').h1.string
 
@@ -42,11 +49,11 @@ class Parser(Process):
             soup_only_main3.find(class_='son2').p.decompose()
 
             soup_only_main3.find(class_='son2').p.decompose()
-            soup_only_main3.find(class_='pingfen').decompose()
+            soup_only_main3.find(class_='yizhu').decompose()
             content_poetry = soup_only_main3.find(
-                class_='son2').get_text()
+                class_='cont',id='cont').get_text()
             content_poetry = re.sub('[\n]+', '\n', content_poetry)
-            content_poetry=content_poetry.strip()
+            content_poetry = content_poetry.strip('\n')
 
             path_html, path_txt = get_output_path(dynasty_poetry, self._index)
             file_html = open(path_html, 'w')
